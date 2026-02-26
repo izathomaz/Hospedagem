@@ -33,28 +33,21 @@ public class AposentoController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Aposento> buscar(@PathVariable Long id) {
-		Aposento aposento = aposentoService.buscarPorId(id);
 
-		if (aposento != null) {
-			return ResponseEntity.ok(aposento);
-		}
-		return ResponseEntity.notFound().build();
+		return aposentoService.buscarPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping
 	public ResponseEntity<Aposento> salvar(@RequestBody Aposento aposento) {
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(aposentoService.salvar(aposento));
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Aposento> atualizar(@PathVariable Long id, @RequestBody Aposento aposento) {
 
-		Aposento atualizado = aposentoService.atualizar(id, aposento);
-
-		if (atualizado != null) {
-			return ResponseEntity.ok(atualizado);
-		}
-		return ResponseEntity.notFound().build();
+		return aposentoService.atualizar(id, aposento).map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{id}")

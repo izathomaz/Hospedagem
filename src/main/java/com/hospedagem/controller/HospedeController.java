@@ -33,28 +33,20 @@ public class HospedeController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Hospede> buscar(@PathVariable Long id) {
-		Hospede hospede = hospedeService.buscarPorId(id);
 
-		if (hospede != null) {
-			return ResponseEntity.ok(hospede);
-		}
-		return ResponseEntity.notFound().build();
+		return hospedeService.buscarPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping
 	public ResponseEntity<Hospede> salvar(@RequestBody Hospede hospede) {
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(hospedeService.salvar(hospede));
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Hospede> atualizar(@PathVariable Long id, @RequestBody Hospede hospede) {
 
-		Hospede atualizado = hospedeService.atualizar(id, hospede);
-
-		if (atualizado != null) {
-			return ResponseEntity.ok(atualizado);
-		}
-		return ResponseEntity.notFound().build();
+		return hospedeService.atualizar(id, hospede).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{id}")

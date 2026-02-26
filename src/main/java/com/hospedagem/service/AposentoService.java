@@ -21,32 +21,27 @@ public class AposentoService {
 		return aposentoRepository.findAll();
 	}
 
-	public Aposento buscarPorId(Long id) {
-		Optional<Aposento> aposento = aposentoRepository.findById(id);
-		return aposento.orElse(null);
+	public Optional<Aposento> buscarPorId(Long id) {
+		return aposentoRepository.findById(id);
 	}
 
 	public Aposento salvar(Aposento aposento) {
 		return aposentoRepository.save(aposento);
 	}
 
-	public Aposento atualizar(Long id, Aposento aposento) {
-		Optional<Aposento> existente = aposentoRepository.findById(id);
+	public Optional<Aposento> atualizar(Long id, Aposento aposento) {
 
-		if (existente.isPresent()) {
+		return aposentoRepository.findById(id).map(existente -> {
 			aposento.setId(id);
 			return aposentoRepository.save(aposento);
-		}
-		return null;
+		});
 	}
 
 	public boolean deletar(Long id) {
-		Optional<Aposento> existente = aposentoRepository.findById(id);
 
-		if (existente.isPresent()) {
+		return aposentoRepository.findById(id).map(existente -> {
 			aposentoRepository.deleteById(id);
 			return true;
-		}
-		return false;
+		}).orElse(false);
 	}
 }

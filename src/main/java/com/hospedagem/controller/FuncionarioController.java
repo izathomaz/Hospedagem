@@ -13,54 +13,47 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hospedagem.entity.Hospede;
-import com.hospedagem.service.HospedeService;
+import com.hospedagem.entity.Funcionario;
+import com.hospedagem.service.FuncionarioService;
 
 @RestController
 @RequestMapping("/funcionarios")
 public class FuncionarioController {
 
-	private final HospedeService hospedeService;
+	private final FuncionarioService funcionarioService;
 
-	public FuncionarioController(HospedeService hospedeService) {
-		this.hospedeService = hospedeService;
+	public FuncionarioController(FuncionarioService funcionarioService) {
+		this.funcionarioService = funcionarioService;
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Hospede>> listar() {
-		return ResponseEntity.ok(hospedeService.buscarTodos());
+	public ResponseEntity<List<Funcionario>> listar() {
+		return ResponseEntity.ok(funcionarioService.buscarTodos());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Hospede> buscar(@PathVariable Long id) {
-		Hospede hospede = hospedeService.buscarPorId(id);
+	public ResponseEntity<Funcionario> buscar(@PathVariable Long id) {
 
-		if (hospede != null) {
-			return ResponseEntity.ok(hospede);
-		}
-		return ResponseEntity.notFound().build();
+		return funcionarioService.buscarPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping
-	public ResponseEntity<Hospede> salvar(@RequestBody Hospede hospede) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(hospedeService.salvar(hospede));
+	public ResponseEntity<Funcionario> salvar(@RequestBody Funcionario funcionario) {
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioService.salvar(funcionario));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Hospede> atualizar(@PathVariable Long id, @RequestBody Hospede hospede) {
+	public ResponseEntity<Funcionario> atualizar(@PathVariable Long id, @RequestBody Funcionario funcionario) {
 
-		Hospede atualizado = hospedeService.atualizar(id, hospede);
-
-		if (atualizado != null) {
-			return ResponseEntity.ok(atualizado);
-		}
-		return ResponseEntity.notFound().build();
+		return funcionarioService.atualizar(id, funcionario).map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable Long id) {
 
-		if (hospedeService.deletar(id)) {
+		if (funcionarioService.deletar(id)) {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.notFound().build();

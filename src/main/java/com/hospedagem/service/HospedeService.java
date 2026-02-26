@@ -21,32 +21,27 @@ public class HospedeService {
 		return hospedeRepository.findAll();
 	}
 
-	public Hospede buscarPorId(Long id) {
-		Optional<Hospede> hospede = hospedeRepository.findById(id);
-		return hospede.orElse(null);
+	public Optional<Hospede> buscarPorId(Long id) {
+		return hospedeRepository.findById(id);
 	}
 
 	public Hospede salvar(Hospede hospede) {
 		return hospedeRepository.save(hospede);
 	}
 
-	public Hospede atualizar(Long id, Hospede hospede) {
-		Optional<Hospede> existente = hospedeRepository.findById(id);
+	public Optional<Hospede> atualizar(Long id, Hospede hospede) {
 
-		if (existente.isPresent()) {
+		return hospedeRepository.findById(id).map(existente -> {
 			hospede.setId(id);
 			return hospedeRepository.save(hospede);
-		}
-		return null;
+		});
 	}
 
 	public boolean deletar(Long id) {
-		Optional<Hospede> existente = hospedeRepository.findById(id);
 
-		if (existente.isPresent()) {
+		return hospedeRepository.findById(id).map(existente -> {
 			hospedeRepository.deleteById(id);
 			return true;
-		}
-		return false;
+		}).orElse(false);
 	}
 }

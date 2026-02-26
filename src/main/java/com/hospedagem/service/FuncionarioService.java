@@ -21,32 +21,27 @@ public class FuncionarioService {
 		return funcionarioRepository.findAll();
 	}
 
-	public Funcionario buscarPorId(Long id) {
-		Optional<Funcionario> funcionario = funcionarioRepository.findById(id);
-		return funcionario.orElse(null);
+	public Optional<Funcionario> buscarPorId(Long id) {
+		return funcionarioRepository.findById(id);
 	}
 
 	public Funcionario salvar(Funcionario funcionario) {
 		return funcionarioRepository.save(funcionario);
 	}
 
-	public Funcionario atualizar(Long id, Funcionario funcionario) {
-		Optional<Funcionario> existente = funcionarioRepository.findById(id);
+	public Optional<Funcionario> atualizar(Long id, Funcionario funcionario) {
 
-		if (existente.isPresent()) {
+		return funcionarioRepository.findById(id).map(existente -> {
 			funcionario.setId(id);
 			return funcionarioRepository.save(funcionario);
-		}
-		return null;
+		});
 	}
 
 	public boolean deletar(Long id) {
-		Optional<Funcionario> existente = funcionarioRepository.findById(id);
 
-		if (existente.isPresent()) {
+		return funcionarioRepository.findById(id).map(existente -> {
 			funcionarioRepository.deleteById(id);
 			return true;
-		}
-		return false;
+		}).orElse(false);
 	}
 }
